@@ -1,5 +1,5 @@
 import pandas as pd
-import pandas_ta as ta
+import ta
 import yfinance as yf
 from typing import Dict, Optional
 
@@ -27,18 +27,28 @@ def fetch_ohlcv(symbol: str, timeframe: str) -> Optional[pd.DataFrame]:
 def compute_indicators(df: pd.DataFrame) -> Dict:
     if df is None or len(df) < 30:
         return {}
+
     close = df["close"]
     high = df["high"]
     low = df["low"]
     volume = df["volume"]
-    ema9 = ta.ema(close, length=9)
-    ema21 = ta.ema(close, length=21)
-    ema50 = ta.ema(close, length=50)
-    rsi = ta.rsi(close, length=14)
-    macd_df = ta.macd(close, fast=12, slow=26, signal=9)
-    bb = ta.bbands(close, length=20)
-    atr = ta.atr(high, low, close, length=14)
-    obv = ta.obv(close, volume)
+
+    # Trend
+    ema9 = ta.trend.ema_indicator(close, window=9)
+    ema21 = ta.trend.ema_indicator(close, window=21)
+    ema50 = ta.trend.ema_indicator(close, window=50)
+
+    # Momentum
+    rsi = ta.momentum.rsi(close, window=14)
+    macd = ta.trend.MACD(close, window_fast=12, window_slow=26, window_sign=9)
+
+    # Volatility
+    bb = ta.volatility.BollingerBands(close, window=20)
+    atr = ta.volatility.average_true_range(high, low, close, window=14)
+
+    # Volume
+    obv = ta.volume.on_balance_volume(close, volume)
+
     last = -1
     return {
         "price": round(float(close.iloc[last]), 4),
@@ -46,12 +56,12 @@ def compute_indicators(df: pd.DataFrame) -> Dict:
         "ema21": _safe(ema21, last),
         "ema50": _safe(ema50, last),
         "rsi": _safe(rsi, last),
-        "macd": _safe(macd_df["MACD_12_26_9"] if macd_df is not None else None, last),
-        "macd_signal": _safe(macd_df["MACDs_12_26_9"] if macd_df is not None else None, last),
-        "macd_hist": _safe(macd_df["MACDh_12_26_9"] if macd_df is not None else None, last),
-        "bb_upper": _safe(bb["BBU_20_2.0"] if bb is not None else None, last),
-        "bb_mid": _safe(bb["BBM_20_2.0"] if bb is not None else None, last),
-        "bb_lower": _safe(bb["BBL_20_2.0"] if bb is not None else None, last),
+        "macd": _safe(macd.macd(), last),
+        "macd_signal": _safe(macd.macd_signal(), last),
+        "macd_hist": _safe(macd.macd_diff(), last),
+        "bb_upper": _safe(bb.bollinger_hband(), last),
+        "bb_mid": _safe(bb.bollinger_mavg(), last),
+        "bb_lower": _safe(bb.bollinger_lband(), last),
         "atr": _safe(atr, last),
         "obv_trend": _obv_trend(obv),
         "prev_close": round(float(close.iloc[-2]), 4) if len(close) >= 2 else None,
