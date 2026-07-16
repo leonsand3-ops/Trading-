@@ -17,6 +17,19 @@ Status:      given / tagen / ej tagen
 
 <!-- Nya signaler läggs till nedanför denna rad, senaste överst -->
 
+## [#2] 2026-07-16 ~19:20 UTC — BTCUSD (1h, Bitstamp)
+Signal:      KÖP vid stödzon (limit)
+Entry:       63 950 (zon 63 850–64 050)
+Stop Loss:   63 550
+Take Profit: TP1 64 800 (ta hälften + flytta SL till breakeven), TP2 65 300
+R/R:         ~2.1 till TP1, ~3.4 till TP2
+Setup:       1h-bilden är konstruktiv: dubbelbotten 61 700/61 800 (9/7 & 14/7) följt av
+             stark impuls till 65 500 (15/7). Nuvarande nedgång är en rekyl i den rörelsen.
+             Entryzonen = intradagsstödet 63 850–64 000 + 38–50% retracement av rallyt
+             (38,2% ≈ 64 100, 50% ≈ 63 650). SL under 50%-nivån.
+Ogiltig om:  1h-candle stänger under 63 600 → rekylen är djupare, nästa zon 62 800–63 000.
+Status:      given / väntar på entry
+
 ## [#1] 2026-07-16 ~17:20 UTC — BTCUSD (15m, Bitstamp)
 Signal:      AVVAKTA → villkorat KÖP vid stöd
 Entry:       64 000 (limit vid stödzonen 63 900–64 050, kräver avvisningsreaktion)
@@ -27,7 +40,8 @@ Setup:       Range-dag utan makrokatalysator. Dubbelbotten 63 900–64 000 tidig
              range-topp 64 800 avvisad hårt. Pris föll i mitten av rangen vid signal
              (64 145) — ingen entry i fallande kniv, köp endast vid reaktion på stödet.
 Ogiltig om:  15m-candle stänger under 63 900 → setup avblåst (då är range-botten bruten).
-Status:      given / väntar på entry
+Status:      avslutad — TP nådd, ej tagen av användaren (ingen trade loggad)
+Utfall:      Priset studsade på stödzonen och nådde TP 64 600 (+2.4R på pappret).
 Uppdatering 17:31 UTC: Pris 64 206, wick ner till ~64 150 — entryzonen ej nådd än.
              Bredare bild visar lägre toppar från 65 500 (15/7) → 64 800: 15m-strukturen
              är en nedtrend, och stödet 63 850–63 900 har redan testats 3 ggr.
