@@ -16,3 +16,15 @@ Status:      given / tagen / ej tagen
 ---
 
 <!-- Nya signaler läggs till nedanför denna rad, senaste överst -->
+
+## [#1] 2026-07-16 ~17:20 UTC — BTCUSD (15m, Bitstamp)
+Signal:      AVVAKTA → villkorat KÖP vid stöd
+Entry:       64 000 (limit vid stödzonen 63 900–64 050, kräver avvisningsreaktion)
+Stop Loss:   63 750
+Take Profit: 64 600
+R/R:         ~2.4 (risk 250 / reward 600)
+Setup:       Range-dag utan makrokatalysator. Dubbelbotten 63 900–64 000 tidigare idag,
+             range-topp 64 800 avvisad hårt. Pris föll i mitten av rangen vid signal
+             (64 145) — ingen entry i fallande kniv, köp endast vid reaktion på stödet.
+Ogiltig om:  15m-candle stänger under 63 900 → setup avblåst (då är range-botten bruten).
+Status:      given
