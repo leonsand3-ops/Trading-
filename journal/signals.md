@@ -27,4 +27,9 @@ Setup:       Range-dag utan makrokatalysator. Dubbelbotten 63 900–64 000 tidig
              range-topp 64 800 avvisad hårt. Pris föll i mitten av rangen vid signal
              (64 145) — ingen entry i fallande kniv, köp endast vid reaktion på stödet.
 Ogiltig om:  15m-candle stänger under 63 900 → setup avblåst (då är range-botten bruten).
-Status:      given
+Status:      given / väntar på entry
+Uppdatering 17:31 UTC: Pris 64 206, wick ner till ~64 150 — entryzonen ej nådd än.
+             Bredare bild visar lägre toppar från 65 500 (15/7) → 64 800: 15m-strukturen
+             är en nedtrend, och stödet 63 850–63 900 har redan testats 3 ggr.
+             Setup intakt men taktisk: ta inte entry utan tydlig reaktion, och
+             flytta SL till breakeven snabbt om den fylls.
