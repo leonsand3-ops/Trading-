@@ -17,6 +17,25 @@ Status:      given / tagen / ej tagen
 
 <!-- Nya signaler läggs till nedanför denna rad, senaste överst -->
 
+## [#4] 2026-07-17 ~16:35 UTC — GULD GC1! (1h, COMEX)
+Signal:      SÄLJ vid motstånd (limit) — endast intradag pga fredagskväll
+Entry:       4 055 (zon 4 052–4 062)
+Stop Loss:   4 086
+Take Profit: 4 000
+R/R:         ~1.8
+Setup:       1h-nedtrend: lägre toppar 4 140 (10/7) → 4 085 (15/7). Veckans största
+             fall sedan juni (inflations-/ränteoro) = säljarnas marknad. Stödzonen
+             3 975–4 000 har hållit 3+ ggr och priset studsade nyss till 4 025 —
+             mitt i rangen, ingen trade där. Entry vid omtest av motståndet
+             4 055–4 060, med trenden.
+Ogiltig om:  1h-candle stänger över 4 062 → strukturskifte, stå platt.
+             Då gäller istället omvänt scenario: KÖP rekyl mot 4 055–4 060 med
+             mål 4 100 (reclaim av 4 000 + brott av lower high = botten kan vara satt).
+VIKTIGT:     COMEX stänger 21:00 UTC för helgen. Ingen position över helgen —
+             Mellanöstern-eskalering kan gappa guld UPPÅT över SL (safe haven).
+             Ej fylld före ~19:30 UTC → dra ordern. Fylld men ej i mål → stäng före 21:00.
+Status:      given / väntar på entry
+
 ## [#2] 2026-07-16 ~19:20 UTC — BTCUSD (1h, Bitstamp)
 Signal:      KÖP vid stödzon (limit)
 Entry:       63 950 (zon 63 850–64 050)
