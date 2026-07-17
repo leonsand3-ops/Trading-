@@ -1,2 +1,3 @@
 id,datum,symbol,riktning,tidsram,entry,stop_loss,take_profit,exit,resultat_r,utfall,setup,notering
 1,2026-07-17,BTCUSD,short,15m,63132,63653,62166,63300,-0.3,förlust (manuell stängning),"pullback-short i nedtrend (signal #3)","paper trading; fylld 14:00 UTC storlek 6; delstängde 3 vid ~BE 14:02; stängde resten ~16:25 vid ~63 300 när 15m stängde över 63 300 (högre bottnar = struktur vände); ca −450 USD netto; korrekt exit enligt plan"
+2,2026-07-17,BTCUSD,short,15m,~63975,?,?,,,öppen,"short på avvisning av 64 300–64 500-zonen efter squeeze till 64 380","paper trading; storlek 3; fylld ~19:20 UTC; SL/TP ej bekräftade av användaren än"
