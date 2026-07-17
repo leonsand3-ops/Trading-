@@ -34,7 +34,8 @@ Ogiltig om:  1h-candle stänger över 4 062 → strukturskifte, stå platt.
 VIKTIGT:     COMEX stänger 21:00 UTC för helgen. Ingen position över helgen —
              Mellanöstern-eskalering kan gappa guld UPPÅT över SL (safe haven).
              Ej fylld före ~19:30 UTC → dra ordern. Fylld men ej i mål → stäng före 21:00.
-Status:      given / väntar på entry
+Status:      ANNULLERAD — fel bildunderlag (endast 1h, 4h-kontext saknades).
+             Ersätts av ny analys med korrekta skärmdumpar. Lägg INTE denna order.
 
 ## [#2] 2026-07-16 ~19:20 UTC — BTCUSD (1h, Bitstamp)
 Signal:      KÖP vid stödzon (limit)
