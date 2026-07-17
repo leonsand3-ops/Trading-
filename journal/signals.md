@@ -48,9 +48,9 @@ Setup:       Nedtrend på både 1h och 15m efter brott av 63 600. Studsen till 6
 Ogiltig om:  15m-candle stänger över 63 500 → strukturen har vänt, stå platt.
 Nästa setup: KÖP vid 61 900–62 100 (stort 1h-stöd, testat 9/7 & 13–14/7) — men endast
              med tydlig reaktion, ingen stående limit i nyhetsdrivet fall.
-Status:      TAGEN — order lagd i paper trading 13:34 UTC (ej fylld än)
-Order:       Sell Limit 63 132 / SL 63 653 / TP 62 166 / storlek 3
-             Risk ~1 563 USD, reward ~2 898 USD → R/R ~1.85
+Status:      TAGEN — fylld ~14:00 UTC → trade #1 i trades.csv
+Order:       Short 63 132 / SL 63 653 / TP 62 166 / storlek 6 (dubblad från 3)
+             Risk ~3 090 USD, reward ~5 830 USD → R/R ~1.85
 
 ## [#1] 2026-07-16 ~17:20 UTC — BTCUSD (15m, Bitstamp)
 Signal:      AVVAKTA → villkorat KÖP vid stöd

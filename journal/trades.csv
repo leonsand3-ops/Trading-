@@ -1,1 +1,2 @@
 id,datum,symbol,riktning,tidsram,entry,stop_loss,take_profit,exit,resultat_r,utfall,setup,notering
+1,2026-07-17,BTCUSD,short,15m,63132,63653,62166,,,öppen,"pullback-short i nedtrend (signal #3)","paper trading; storlek 6 (dubblad från planerade 3); risk ~3 090 USD; fylld ~14:00 UTC"
