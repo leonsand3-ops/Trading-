@@ -28,6 +28,26 @@ Setup:       1h-bilden är konstruktiv: dubbelbotten 61 700/61 800 (9/7 & 14/7) 
              Entryzonen = intradagsstödet 63 850–64 000 + 38–50% retracement av rallyt
              (38,2% ≈ 64 100, 50% ≈ 63 650). SL under 50%-nivån.
 Ogiltig om:  1h-candle stänger under 63 600 → rekylen är djupare, nästa zon 62 800–63 000.
+Status:      avslutad — SL träffad (på pappret −1R), oklart om användaren tog den
+Utfall 17/7: Priset föll rakt genom entryzonen (fill ~63 950) och genom SL 63 550
+             under natten/morgonen, fortsatte till ~62 600. Nedgången var nyhetsdriven
+             (risk-off: USA–Iran, Hormuz, chipsell-off) — stödet höll inte.
+             Lärdom: 3:e–4:e testet av ett stöd + nyhetsrisk = mindre position eller avstå.
+
+## [#3] 2026-07-17 ~13:25 UTC — BTCUSD (1h + 15m, Bitstamp)
+Signal:      SÄLJ vid pullback (limit)
+Entry:       63 150 (zon 63 100–63 300)
+Stop Loss:   63 650
+Take Profit: 62 150 (strax ovanför huvudstödet 61 900–62 100)
+R/R:         ~2.0–2.3
+Setup:       Nedtrend på både 1h och 15m efter brott av 63 600. Studsen till 63 300
+             (15m, ~12:00 UTC) avvisades = lägre topp. Entry på omtest av brottszonen,
+             SL ovanför avvisningstoppen. Macro-medvind för short: risk-off-våg
+             (Iran/Hormuz/chip-rout) — men nyhetsdrivet = risk för våldsamma squeezes
+             åt båda håll vid deeskalering. Kör mindre position än normalt.
+Ogiltig om:  15m-candle stänger över 63 500 → strukturen har vänt, stå platt.
+Nästa setup: KÖP vid 61 900–62 100 (stort 1h-stöd, testat 9/7 & 13–14/7) — men endast
+             med tydlig reaktion, ingen stående limit i nyhetsdrivet fall.
 Status:      given / väntar på entry
 
 ## [#1] 2026-07-16 ~17:20 UTC — BTCUSD (15m, Bitstamp)
