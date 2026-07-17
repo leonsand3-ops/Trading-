@@ -17,6 +17,26 @@ Status:      given / tagen / ej tagen
 
 <!-- Nya signaler läggs till nedanför denna rad, senaste överst -->
 
+## [#5] 2026-07-17 ~16:40 UTC — XAUUSD spot (4h/2h/15m, OANDA)
+Signal:      KÖP vid omtest av 4 000 (limit)
+Entry:       4 002 (zon 3 998–4 008)
+Stop Loss:   3 970
+Take Profit: TP1 4 040 (ta hälften + SL till BE), TP2 4 055
+R/R:         ~1.2 till TP1, ~1.7 till TP2
+Setup:       4h: stor range 3 940–4 220 sedan maj. Juni-bottnarna 3 940–3 960 = HTF-stöd.
+             Idag: svep ner till ~3 955 (under 3 975/3 980-bottnarna, in i HTF-zonen)
+             följt av kraftig V-återhämtning och reclaim av 4 000 — klassisk spring.
+             Nedtrenden från 4 200 är intakt under 4 060, därför konservativa mål
+             under den nivån. Entry på omtest av 4 000-reclaimen, SL under svepets skuldra.
+Ogiltig om:  15m stänger under 3 985 före fill → reclaimen misslyckades, stå platt.
+             2h-stängning över 4 060 senare = strukturskifte → större köpscenario mot 4 100.
+HELGREGEL:   Spot-guld stänger ~21:00 UTC fredag. Två alternativ:
+             A) Intradag: stäng allt senast 20:45 UTC oavsett P/L.
+             B) Håll över helgen: HALV storlek, medveten om gap-risk. Geopolitiken
+                (Iran/Hormuz) ger viss uppsideskevhet för guld som safe haven,
+                men hökig Fed-rubrik kan gappa ner. Användarens val.
+Status:      given / väntar på entry
+
 ## [#4] 2026-07-17 ~16:35 UTC — GULD GC1! (1h, COMEX)
 Signal:      SÄLJ vid motstånd (limit) — endast intradag pga fredagskväll
 Entry:       4 055 (zon 4 052–4 062)
