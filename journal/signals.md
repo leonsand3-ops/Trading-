@@ -35,7 +35,9 @@ HELGREGEL:   Spot-guld stänger ~21:00 UTC fredag. Två alternativ:
              B) Håll över helgen: HALV storlek, medveten om gap-risk. Geopolitiken
                 (Iran/Hormuz) ger viss uppsideskevhet för guld som safe haven,
                 men hökig Fed-rubrik kan gappa ner. Användarens val.
-Status:      given / väntar på entry
+Status:      TAGEN — Buy Limit lagd 16:44 UTC (ej fylld än)
+Order:       Buy Limit 4 002.085 / SL 3 969.34 / TP 4 039.74 / storlek 30
+             Risk ~982 USD, reward ~1 130 USD → R/R ~1.15 (endast TP1 som mål)
 
 ## [#4] 2026-07-17 ~16:35 UTC — GULD GC1! (1h, COMEX)
 Signal:      SÄLJ vid motstånd (limit) — endast intradag pga fredagskväll
