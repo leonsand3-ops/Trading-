@@ -3,6 +3,10 @@
 Beslutsstöd för swing trading i amerikanska aktier. Läs `docs/architecture.md` och
 `docs/decisions.md` innan större ändringar.
 
+**Gammal kod:** `backend/`, `frontend/`, `start.bat` och `README.md` hör till ett
+tidigare, orelaterat projekt. Använd dem inte, bygg inte vidare på dem och importera
+inget från dem. Allt nytt ligger i `src/swing/`, `tests/` och `docs/`.
+
 ## Kommandon
 
 ```bash
