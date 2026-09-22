@@ -37,8 +37,15 @@ uv run swing data show NVDA --as-of 2024-03-01   # så som datan var känd det d
 Datan sparas i mappen `data\` i projektet. Den checkas inte in i git.
 Byt plats med miljövariabeln `SWING_DATA_DIR`.
 
-Kör `swing data update` igen när du vill ha ny data. Inget skrivs över; varje körning
-sparas som en ny version.
+Kör `swing data update` igen när du vill ha ny data. Den hämtar bara de senaste dagarna
+för symboler som redan finns (med tio dagars överlapp, så att Yahoos korrigeringar
+kommer med). Inget skrivs över; varje körning sparas som en ny version.
+
+En börsdag sparas först sex timmar efter att USA-börsen stängt (dvs. från ca 04:00
+svensk tid), eftersom Yahoo fortsätter rätta dagens siffror en tid efter stängning.
+Kör därför uppdateringen på morgonen.
+
+Vill du ladda ner allt på nytt: `uv run swing data update --start 2010-01-01`.
 
 ## Egna CSV-filer
 

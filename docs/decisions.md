@@ -7,8 +7,11 @@ Nya beslut läggs till överst. Ändra inte gamla beslut, skriv ett nytt som ers
 - **Tidsstämplar:** en dagsbar har `known_at` = ordinarie stängning 16:00 New York-tid
   den dagen. Dagar med tidig stängning räknas också som 16:00, vilket bara gör datan
   senare känd, aldrig tidigare. `ingested_at` är när raden sparades.
-- **Ofärdiga dagar sparas inte.** En bar vars stängning inte har passerats vid
-  hämtningen kastas, så en intradagsbild blir aldrig en dagsbar.
+- **Ofärdiga dagar sparas inte.** En bar sparas först sex timmar efter stängning
+  (`SETTLE_DELAY`). Första riktiga körningen visade att Yahoos dagsbar direkt efter
+  stängning kan vara felaktig (öppning över dagens högsta).
+- **Stegvis uppdatering:** utan `--start` hämtas bara från tio dagar före senast
+  sparade bar, så att leverantörens sena korrigeringar ersätter tidigare versioner.
 - **Versioner:** senaste `ingested_at` vinner per instrument och datum. Versionen väljs
   innan as-of-filtreringen, så en senare korrigering (t.ex. ny splitjustering) används
   för alla datum. Det är ett medvetet val för splitjusterad leverantörsdata.

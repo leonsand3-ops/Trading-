@@ -10,7 +10,7 @@ import typer
 from swing import __version__
 from swing.config import data_dir, read_symbol_file
 from swing.data.asof import BarHistory
-from swing.data.ingest import ingest_bars
+from swing.data.ingest import incremental_starts, ingest_bars
 from swing.data.instruments import InstrumentRegistry
 from swing.data.providers import BarProvider, CsvProvider, YahooProvider
 from swing.data.quality import Severity, check_bars
@@ -21,6 +21,7 @@ data_app = typer.Typer(no_args_is_help=True, help="Hämta och kontrollera markna
 app.add_typer(data_app, name="data")
 
 DEFAULT_UNIVERSE = Path("config/universe_dev.txt")
+DEFAULT_START = date(2010, 1, 1)
 
 
 @app.callback()
@@ -44,7 +45,13 @@ def data_update(
         str | None, typer.Option(help="Kommaseparerade symboler, t.ex. AAPL,MSFT.")
     ] = None,
     universe: Annotated[Path, typer.Option(help="Fil med en symbol per rad.")] = DEFAULT_UNIVERSE,
-    start: Annotated[str, typer.Option(help="Startdatum, ÅÅÅÅ-MM-DD.")] = "2010-01-01",
+    start: Annotated[
+        str | None,
+        typer.Option(
+            help="Startdatum ÅÅÅÅ-MM-DD för alla symboler. Utan: bara nya dagar, "
+            f"eller från {DEFAULT_START} för symboler som saknas."
+        ),
+    ] = None,
     end: Annotated[str | None, typer.Option(help="Slutdatum, standard idag.")] = None,
     source: Annotated[str, typer.Option(help="yahoo eller csv.")] = "yahoo",
     csv_dir: Annotated[Path | None, typer.Option(help="Katalog med <SYMBOL>.csv.")] = None,
@@ -72,10 +79,15 @@ def data_update(
     def progress(position: int, total: int, symbol: str) -> None:
         typer.echo(f"  [{position}/{total}] {symbol}")
 
+    starts = (
+        _parse_date(start)
+        if start
+        else incremental_starts(store, provider.source, symbol_list, DEFAULT_START)
+    )
     result = ingest_bars(
         provider,
         symbol_list,
-        _parse_date(start),
+        starts,
         end_date,
         store,
         datetime.now(UTC),

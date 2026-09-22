@@ -2,7 +2,7 @@ from datetime import UTC, date, datetime
 
 import polars as pl
 
-from swing.data.ingest import ingest_bars
+from swing.data.ingest import incremental_starts, ingest_bars
 from swing.data.store import DataStore
 from tests.conftest import FakeProvider, make_raw_bars
 
@@ -71,3 +71,32 @@ def test_duplicate_dates_from_provider_are_collapsed(store: DataStore) -> None:
         datetime(2024, 2, 1, tzinfo=UTC),
     )
     assert store.latest_bars().height == 3
+
+
+def test_bar_is_not_stored_until_it_has_settled(store: DataStore) -> None:
+    provider = FakeProvider({"AAA": make_raw_bars(START, 5)})  # Jan 1..5, close 21:00 UTC
+    one_hour_after_close = datetime(2024, 1, 5, 22, 0, tzinfo=UTC)
+    ingest_bars(provider, ["AAA"], START, END, store, one_hour_after_close)
+    assert store.latest_bars().get_column("date").max() == date(2024, 1, 4)
+
+    next_morning = datetime(2024, 1, 6, 12, 0, tzinfo=UTC)
+    ingest_bars(provider, ["AAA"], START, END, store, next_morning)
+    assert store.latest_bars().get_column("date").max() == date(2024, 1, 5)
+
+
+def test_incremental_starts_overlap_last_bar_and_default_for_new(store: DataStore) -> None:
+    provider = FakeProvider({"AAA": make_raw_bars(START, 20)})  # last bar Jan 26
+    ingest_bars(provider, ["AAA"], START, END, store, datetime(2024, 2, 1, tzinfo=UTC))
+
+    starts = incremental_starts(store, "fake", ["AAA", "bbb"], date(2010, 1, 1))
+
+    assert starts == {"AAA": date(2024, 1, 16), "BBB": date(2010, 1, 1)}
+
+
+def test_per_symbol_start_limits_download(store: DataStore) -> None:
+    provider = FakeProvider({"AAA": make_raw_bars(START, 20), "BBB": make_raw_bars(START, 20)})
+    starts = {"AAA": date(2024, 1, 22), "BBB": START}
+    result = ingest_bars(
+        provider, ["AAA", "BBB"], starts, END, store, datetime(2024, 2, 1, tzinfo=UTC)
+    )
+    assert result.rows_written == {"AAA": 5, "BBB": 20}
