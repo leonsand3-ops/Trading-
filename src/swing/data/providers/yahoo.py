@@ -44,13 +44,17 @@ class YahooProvider:
         except ImportError as exc:
             raise ProviderError("yfinance is not installed: run `uv sync --extra yahoo`") from exc
 
-        hist = yf.Ticker(symbol).history(
-            start=start.isoformat(),
-            end=(end + timedelta(days=1)).isoformat(),  # yfinance end is exclusive
-            interval="1d",
-            auto_adjust=False,
-            actions=False,
-        )
+        try:
+            hist = yf.Ticker(symbol).history(
+                start=start.isoformat(),
+                end=(end + timedelta(days=1)).isoformat(),  # yfinance end is exclusive
+                interval="1d",
+                auto_adjust=False,
+                actions=False,
+                raise_errors=True,
+            )
+        except Exception as exc:  # yfinance raises many unrelated exception types
+            raise ProviderError(f"{symbol}: {exc}") from exc
         if hist is None or hist.empty:
             raise ProviderError(f"no data for {symbol}")
         columns = {name: hist[name].tolist() for name in ("Open", "High", "Low", "Close", "Volume")}

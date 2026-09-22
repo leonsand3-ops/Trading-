@@ -45,6 +45,7 @@ def test_data_update_check_and_show(tmp_path: Path, monkeypatch: pytest.MonkeyPa
         ],
     )
     assert update.exit_code == 0, update.output
+    assert "[1/2] AAA" in update.stdout
     assert "Sparade 4 rader för 1 symboler" in update.stdout
     assert "MISSLYCKADES BBB" in update.output
 

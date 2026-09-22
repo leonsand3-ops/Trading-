@@ -67,8 +67,19 @@ def data_update(
     )
     end_date = _parse_date(end) if end else date.today()
     store = DataStore(data_dir())
+    typer.echo(f"Hämtar {len(symbol_list)} symboler från {provider.source}...")
+
+    def progress(position: int, total: int, symbol: str) -> None:
+        typer.echo(f"  [{position}/{total}] {symbol}")
+
     result = ingest_bars(
-        provider, symbol_list, _parse_date(start), end_date, store, datetime.now(UTC)
+        provider,
+        symbol_list,
+        _parse_date(start),
+        end_date,
+        store,
+        datetime.now(UTC),
+        on_symbol=progress,
     )
     total = sum(result.rows_written.values())
     typer.echo(f"Sparade {total} rader för {len(result.rows_written)} symboler i {store.root}")

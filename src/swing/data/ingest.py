@@ -1,6 +1,6 @@
 """Fetch bars from a provider and append them to the store."""
 
-from collections.abc import Iterable
+from collections.abc import Callable, Sequence
 from dataclasses import dataclass, field
 from datetime import date, datetime
 
@@ -21,23 +21,27 @@ class IngestResult:
 
 def ingest_bars(
     provider: BarProvider,
-    symbols: Iterable[str],
+    symbols: Sequence[str],
     start: date,
     end: date,
     store: DataStore,
     now: datetime,
+    on_symbol: Callable[[int, int, str], None] | None = None,
 ) -> IngestResult:
     """Download ``symbols`` and store them as a new version stamped ``now``.
 
     Bars whose session has not closed yet at ``now`` are dropped, so an intraday
-    snapshot is never stored as if it were a finished daily bar.
+    snapshot is never stored as if it were a finished daily bar. ``on_symbol`` is called
+    with (position, total, symbol) before each download, for progress output.
     """
     if now.tzinfo is None:
         raise ValueError("now must be timezone-aware")
     registry = InstrumentRegistry(store)
     result = IngestResult()
-    for symbol in symbols:
+    for position, symbol in enumerate(symbols, start=1):
         symbol = symbol.strip().upper()
+        if on_symbol is not None:
+            on_symbol(position, len(symbols), symbol)
         try:
             raw = provider.fetch_daily_bars(symbol, start, end)
         except ProviderError as exc:
