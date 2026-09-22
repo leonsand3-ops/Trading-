@@ -1,6 +1,7 @@
 # CLAUDE.md
 
-Beslutsstöd för swing trading i amerikanska aktier. Läs `docs/architecture.md` och
+Beslutsstöd för swing trading i amerikanska aktier. Läs `docs/status.md` (var vi är),
+`docs/architecture.md` och
 `docs/decisions.md` innan större ändringar.
 
 **Gammal kod:** `backend/`, `frontend/`, `start.bat` och `README.md` hör till ett
