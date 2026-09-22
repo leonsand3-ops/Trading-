@@ -1,0 +1,63 @@
+# Utvecklingsuniversum: index- och sektor-ETF:er plus likvida aktier.
+# Bara för utveckling. Riktig forskning kräver ett survivorship-fritt universum.
+
+# Index
+SPY
+QQQ
+IWM
+DIA
+
+# Sektorer (SPDR)
+XLK
+XLF
+XLE
+XLV
+XLI
+XLY
+XLP
+XLU
+XLB
+XLRE
+XLC
+
+# Aktier
+AAPL
+MSFT
+NVDA
+AMZN
+GOOGL
+META
+TSLA
+AVGO
+AMD
+NFLX
+CRM
+ADBE
+ORCL
+JPM
+BAC
+GS
+V
+MA
+UNH
+LLY
+JNJ
+MRK
+ABBV
+XOM
+CVX
+CAT
+DE
+GE
+BA
+HD
+COST
+WMT
+NKE
+MCD
+SBUX
+DIS
+UBER
+PLTR
+SMCI
+MU

@@ -4,12 +4,19 @@ version = "0.1.0"
 description = "Beslutsstöd för swing trading i amerikanska aktier"
 requires-python = ">=3.12,<3.13"
 dependencies = [
+    "polars>=1.8",
     "pydantic>=2.8",
     "typer>=0.12",
+    "tzdata>=2024.1",
 ]
 
 [project.scripts]
 swing = "swing.cli:app"
+
+[project.optional-dependencies]
+yahoo = [
+    "yfinance>=0.2.40",
+]
 
 [dependency-groups]
 dev = [
@@ -44,3 +51,7 @@ plugins = ["pydantic.mypy"]
 [tool.pytest.ini_options]
 testpaths = ["tests"]
 addopts = "-q"
+
+[[tool.mypy.overrides]]
+module = ["yfinance", "yfinance.*"]
+ignore_missing_imports = true

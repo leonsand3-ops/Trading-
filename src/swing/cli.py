@@ -1,10 +1,26 @@
 """Command line entry point."""
 
+from collections import Counter
+from datetime import UTC, date, datetime
+from pathlib import Path
+from typing import Annotated
+
 import typer
 
 from swing import __version__
+from swing.config import data_dir, read_symbol_file
+from swing.data.asof import BarHistory
+from swing.data.ingest import ingest_bars
+from swing.data.instruments import InstrumentRegistry
+from swing.data.providers import BarProvider, CsvProvider, YahooProvider
+from swing.data.quality import Severity, check_bars
+from swing.data.store import DataStore
 
 app = typer.Typer(no_args_is_help=True, help="Beslutsstöd för swing trading.")
+data_app = typer.Typer(no_args_is_help=True, help="Hämta och kontrollera marknadsdata.")
+app.add_typer(data_app, name="data")
+
+DEFAULT_UNIVERSE = Path("config/universe_dev.txt")
 
 
 @app.callback()
@@ -16,3 +32,102 @@ def main() -> None:
 def version() -> None:
     """Print the installed version."""
     typer.echo(__version__)
+
+
+def _parse_date(value: str) -> date:
+    return date.fromisoformat(value)
+
+
+@data_app.command("update")
+def data_update(
+    symbols: Annotated[
+        str | None, typer.Option(help="Kommaseparerade symboler, t.ex. AAPL,MSFT.")
+    ] = None,
+    universe: Annotated[Path, typer.Option(help="Fil med en symbol per rad.")] = DEFAULT_UNIVERSE,
+    start: Annotated[str, typer.Option(help="Startdatum, ÅÅÅÅ-MM-DD.")] = "2010-01-01",
+    end: Annotated[str | None, typer.Option(help="Slutdatum, standard idag.")] = None,
+    source: Annotated[str, typer.Option(help="yahoo eller csv.")] = "yahoo",
+    csv_dir: Annotated[Path | None, typer.Option(help="Katalog med <SYMBOL>.csv.")] = None,
+) -> None:
+    """Hämta dagsdata och spara som en ny version."""
+    provider: BarProvider
+    if source == "yahoo":
+        provider = YahooProvider()
+    elif source == "csv":
+        if csv_dir is None:
+            raise typer.BadParameter("--csv-dir krävs med --source csv")
+        provider = CsvProvider(csv_dir)
+    else:
+        raise typer.BadParameter(f"okänd källa: {source}")
+
+    symbol_list = (
+        [s.strip().upper() for s in symbols.split(",") if s.strip()]
+        if symbols
+        else read_symbol_file(universe)
+    )
+    end_date = _parse_date(end) if end else date.today()
+    store = DataStore(data_dir())
+    result = ingest_bars(
+        provider, symbol_list, _parse_date(start), end_date, store, datetime.now(UTC)
+    )
+    total = sum(result.rows_written.values())
+    typer.echo(f"Sparade {total} rader för {len(result.rows_written)} symboler i {store.root}")
+    for symbol, reason in result.failures.items():
+        typer.echo(f"  MISSLYCKADES {symbol}: {reason}", err=True)
+    if result.failures and not result.rows_written:
+        raise typer.Exit(1)
+
+
+@data_app.command("check")
+def data_check(
+    show: Annotated[int, typer.Option(help="Antal problem att lista.")] = 20,
+) -> None:
+    """Kör datakvalitetskontroller på lagrad data."""
+    store = DataStore(data_dir())
+    bars = store.latest_bars()
+    if bars.is_empty():
+        typer.echo("Ingen data. Kör `swing data update` först.")
+        raise typer.Exit(1)
+    symbols = InstrumentRegistry(store).symbols()
+    issues = check_bars(bars)
+    n_instruments = bars.get_column("instrument_id").n_unique()
+    dates = bars.get_column("date")
+    first, last = str(dates.min()), str(dates.max())
+    typer.echo(f"{bars.height} rader, {n_instruments} instrument, {first} till {last}")
+    counts = Counter((i.severity, i.check) for i in issues)
+    if not counts:
+        typer.echo("Inga problem hittades.")
+        return
+    for (severity, check), n in sorted(counts.items()):
+        typer.echo(f"  {severity.value:<7} {check:<26} {n}")
+    ordered = sorted(issues, key=lambda i: (i.severity != Severity.ERROR, i.check))
+    typer.echo(f"\nFörsta {min(show, len(issues))} problemen:")
+    for issue in ordered[:show]:
+        symbol = symbols.get(issue.instrument_id, issue.instrument_id)
+        typer.echo(
+            f"  {issue.severity.value:<7} {symbol:<6} {issue.date} {issue.check}: {issue.detail}"
+        )
+    if any(i.severity == Severity.ERROR for i in issues):
+        raise typer.Exit(1)
+
+
+@data_app.command("show")
+def data_show(
+    symbol: str,
+    as_of: Annotated[
+        str | None, typer.Option(help="Visa data som den var känd vid stängning detta datum.")
+    ] = None,
+    tail: Annotated[int, typer.Option(help="Antal rader.")] = 10,
+) -> None:
+    """Visa de senaste barerna för en symbol."""
+    store = DataStore(data_dir())
+    registry = InstrumentRegistry(store)
+    ids = [iid for iid, s in registry.symbols().items() if s == symbol.upper()]
+    if not ids:
+        typer.echo(f"Okänd symbol: {symbol}")
+        raise typer.Exit(1)
+    history = BarHistory.load(store)
+    view = history.at_close(_parse_date(as_of) if as_of else date.today())
+    for instrument_id in ids:
+        df = view.bars(instrument_id, lookback=tail)
+        typer.echo(df.select("date", "open", "high", "low", "close", "volume", "source"))

@@ -2,6 +2,26 @@
 
 Nya beslut läggs till överst. Ändra inte gamla beslut, skriv ett nytt som ersätter.
 
+## 2026-09-22 — Konventioner för marknadsdata (fas 1)
+
+- **Tidsstämplar:** en dagsbar har `known_at` = ordinarie stängning 16:00 New York-tid
+  den dagen. Dagar med tidig stängning räknas också som 16:00, vilket bara gör datan
+  senare känd, aldrig tidigare. `ingested_at` är när raden sparades.
+- **Ofärdiga dagar sparas inte.** En bar vars stängning inte har passerats vid
+  hämtningen kastas, så en intradagsbild blir aldrig en dagsbar.
+- **Versioner:** senaste `ingested_at` vinner per instrument och datum. Versionen väljs
+  innan as-of-filtreringen, så en senare korrigering (t.ex. ny splitjustering) används
+  för alla datum. Det är ett medvetet val för splitjusterad leverantörsdata.
+- **Priser:** splitjusterade, inte utdelningsjusterade. Prisfilter som "pris > 5 USD"
+  blir något fel före en split; det hanteras när universe-filtret byggs.
+- **Instrument-ID:** genereras av oss (`ins_…`) och kopplas till källa + symbol i ett
+  register. Med gratisdata går det inte att upptäcka när en ticker återanvänds av ett
+  annat bolag; det löses när vi byter till en källa med permanenta ID:n.
+- **Lagring:** Parquet-filer läses med Polars. DuckDB läggs till när frågorna kräver
+  det.
+- **Yahoo är bara för utveckling.** Ingen avnoterad data, alltså survivorship bias.
+  Källa för riktig forskning väljs innan fas 2.
+
 ## 2026-09-22 — Grundbeslut
 
 | Fråga | Beslut |
