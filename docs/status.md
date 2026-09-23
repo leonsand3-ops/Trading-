@@ -12,28 +12,25 @@ Läs den här filen först i varje ny session. Uppdatera den när något är kla
   future-poisoning-tester, Yahoo- och CSV-adaptrar, datakvalitetskontroller, CLI
   (`swing data update | check | show`), stegvis uppdatering, och regeln att en
   dagsbar räknas först när datumet slagit om i New York (`FINAL_BAR`).
-- Användaren har kört allt på sin Windows-dator: 55 symboler, 221 163 rader,
-  2010-01-04 till 2026-09-22.
+- **Fas 1 verifierad på användarens dator 2026-09-23:** 55 instrument, 221 108 rader,
+  2010-01-04 till 2026-09-21, inga error-rader. Kända och godkända varningar:
+  large_move för AMD 2016-04-22, SMCI 2018-10-04 och NFLX 2013-01-24 (verkliga
+  händelser); zero_volume för XLRE 2015 och AMD 2015-01-02; stale_close för SMCI
+  2017-02-14. Yahoo hade då inte publicerat 2026-09-22 (OBS-raden visade det).
 
-### Pågår
-- **Verifiera fas 1 på användarens dator.** De 4 felen (`ohlc_inconsistent` för DIA,
-  GS, UNH, DIS på 2026-09-22) kom från Yahoos preliminära kvällsbar, som Yahoo tog bort
-  över natten (diagnos 2026-09-23 08:57 UTC: DIA-svaret slutade 2026-09-21). Sådana
-  rader ignoreras nu (se `docs/decisions.md`). Användaren kör: `git pull`,
-  `uv run swing data update`, `uv run swing data check`. Förväntat: inga error-rader;
-  data till 2026-09-21 med en OBS-rad tills Yahoo publicerar 2026-09-22 igen.
-  Kvarvarande varningar är kända och godkända: large_move för AMD 2016-04-22,
-  SMCI 2018-10-04 och NFLX 2013-01-24 (verkliga händelser); zero_volume för XLRE 2015
-  och AMD 2015-01-02; stale_close för SMCI 2017-02-14.
-
-### Nästa steg
-1. Bekräfta 0 error ovan. Då är fas 1 klar.
-2. **Fas 2:** indikatorer (rena funktioner med truncation-tester), marknadsregim,
-   spec + implementation av 2–3 setups (`docs/setups/`), event-driven backtestmotor
-   med kostnadsmodell.
-3. Före riktiga backtestresultat: användaren väljer betald datakälla utan
-   survivorship bias (rekommendation Norgate, fungerar på Windows). Databudget ej
-   bestämd.
+### Nästa steg: fas 2
+1. Indikatorer som rena funktioner med truncation-tester: SMA/EMA, ATR, relativ
+   styrka mot SPY, volym mot snitt, 52-veckors högsta, avstånd i ATR.
+2. Marknadsregim: SPY-trend, breadth (andel av universumet över MA50), volatilitet
+   → 3–4 lägen.
+3. Specar i `docs/setups/` för base breakout och pullback i upptrend. Post-earnings
+   väntar tills vi har earnings-data.
+4. Kostnadsmodell: courtage, valutaväxling, spread/slippage. Användarens
+   courtageklass hos Nordnet behövs (ej känd än).
+5. Event-driven backtestmotor på dagsdata med rapport i R.
+6. Körs på Yahoo-data för att se att allt fungerar. Resultaten räknas inte som bevis
+   förrän vi har survivorship-fri data; användaren väljer källa (rekommendation
+   Norgate) innan dess. Databudget ej bestämd.
 
 ### Att känna till om användaren
 - Kör Windows 11 och PowerShell, ny på git och kommandoraden. Ge exakta kommandon,
