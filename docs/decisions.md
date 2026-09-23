@@ -2,6 +2,16 @@
 
 Nya beslut läggs till överst. Ändra inte gamla beslut, skriv ett nytt som ersätter.
 
+## 2026-09-23 — Rättelse: Yahoos öppningskurs utanför dagens intervall
+
+Felen från 2026-09-22 (open över high för DIA, GS, UNH, DIS) fanns kvar med identiska
+värden efter omhämtning dagen efter. Orsaken var alltså inte att datan hämtades för
+tidigt, som antogs i beslutet nedan, utan ett fel i Yahoos egen data. Yahoo-adaptern
+vidgar nu high/low så att de omfattar open och close när avvikelsen är högst 1 % av
+kursen (`MAX_RANGE_REPAIR`). Större avvikelser lämnas orörda och flaggas av
+kvalitetskontrollen. Väntetiden på sex timmar efter stängning behålls; den är billig
+och skyddar mot ofärdiga dagsbarer.
+
 ## 2026-09-22 — Konventioner för marknadsdata (fas 1)
 
 - **Tidsstämplar:** en dagsbar har `known_at` = ordinarie stängning 16:00 New York-tid

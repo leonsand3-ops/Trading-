@@ -2,7 +2,7 @@
 
 Läs den här filen först i varje ny session. Uppdatera den när något är klart.
 
-## Senast uppdaterad: 2026-09-22
+## Senast uppdaterad: 2026-09-23
 
 ### Klart
 - **Fas 0:** arkitektur (`docs/architecture.md`), beslutslogg (`docs/decisions.md`),
@@ -16,10 +16,10 @@ Läs den här filen först i varje ny session. Uppdatera den när något är kla
   2010-01-04 till 2026-09-22.
 
 ### Pågår
-- **Verifiera fas 1 på användarens dator.** Första `data check` gav 4 fel
-  (`ohlc_inconsistent` för DIA, GS, UNH, DIS på 2026-09-22), eftersom datan hämtades
-  direkt efter stängning. Användaren kör efter 04:00 svensk tid:
-  `cd Trading-`, `git pull`, `uv run swing data update`, `uv run swing data check`.
+- **Verifiera fas 1 på användarens dator.** De 4 felen (`ohlc_inconsistent` för DIA, GS,
+  UNH, DIS på 2026-09-22) fanns kvar efter omhämtning 2026-09-23: det är Yahoos data,
+  inte tidpunkten. Yahoo-adaptern reparerar nu små avvikelser (se `docs/decisions.md`).
+  Användaren kör: `git pull`, `uv run swing data update`, `uv run swing data check`.
   Förväntat: 0 error. Kvarvarande varningar är kända och godkända: large_move för
   AMD 2016-04-22, SMCI 2018-10-04 och NFLX 2013-01-24 (verkliga händelser);
   zero_volume för XLRE 2015 och AMD 2015-01-02; stale_close för SMCI 2017-02-14.

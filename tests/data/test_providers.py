@@ -56,3 +56,26 @@ def test_csv_provider_missing_column_raises_provider_error(tmp_path: Path) -> No
 def test_csv_provider_missing_file_raises_provider_error(tmp_path: Path) -> None:
     with pytest.raises(ProviderError):
         CsvProvider(tmp_path).fetch_daily_bars("NOPE", date(2024, 1, 1), date(2024, 1, 31))
+
+
+def _one_bar(open_: float, high: float, low: float, close: float) -> dict[str, list[float]]:
+    return {"Open": [open_], "High": [high], "Low": [low], "Close": [close], "Volume": [1.0]}
+
+
+def test_normalize_yahoo_repairs_open_slightly_above_high() -> None:
+    # Real case: DIA 2026-09-22 from Yahoo.
+    df = normalize_yahoo(
+        [date(2026, 9, 22)], _one_bar(522.4749755859375, 522.469970703125, 516.51, 518.0)
+    )
+    assert df.row(0, named=True)["high"] == 522.4749755859375
+    assert df.row(0, named=True)["low"] == 516.51
+
+
+def test_normalize_yahoo_repairs_open_slightly_below_low() -> None:
+    df = normalize_yahoo([date(2026, 9, 22)], _one_bar(99.5, 101.0, 99.6, 100.0))
+    assert df.row(0, named=True)["low"] == 99.5
+
+
+def test_normalize_yahoo_leaves_large_inconsistency_for_quality_checks() -> None:
+    df = normalize_yahoo([date(2026, 9, 22)], _one_bar(110.0, 101.0, 99.0, 100.0))
+    assert df.row(0, named=True)["high"] == 101.0
