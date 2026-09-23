@@ -10,19 +10,21 @@ Läs den här filen först i varje ny session. Uppdatera den när något är kla
 - **Fas 1 (kod):** point-in-time-datalager i `src/swing/data/`: append-only
   Parquet-lagring, stabila instrument-ID:n, as-of-åtkomst med truncation- och
   future-poisoning-tester, Yahoo- och CSV-adaptrar, datakvalitetskontroller, CLI
-  (`swing data update | check | show`), stegvis uppdatering, en timmes väntetid
-  efter stängning innan en dag sparas.
+  (`swing data update | check | show`), stegvis uppdatering, och regeln att en
+  dagsbar räknas först när datumet slagit om i New York (`FINAL_BAR`).
 - Användaren har kört allt på sin Windows-dator: 55 symboler, 221 163 rader,
   2010-01-04 till 2026-09-22.
 
 ### Pågår
-- **Verifiera fas 1 på användarens dator.** De 4 felen (`ohlc_inconsistent` för DIA, GS,
-  UNH, DIS på 2026-09-22) fanns kvar efter omhämtning 2026-09-23: det är Yahoos data,
-  inte tidpunkten. Yahoo-adaptern reparerar nu små avvikelser (se `docs/decisions.md`).
-  Användaren kör: `git pull`, `uv run swing data update`, `uv run swing data check`.
-  Förväntat: 0 error. Kvarvarande varningar är kända och godkända: large_move för
-  AMD 2016-04-22, SMCI 2018-10-04 och NFLX 2013-01-24 (verkliga händelser);
-  zero_volume för XLRE 2015 och AMD 2015-01-02; stale_close för SMCI 2017-02-14.
+- **Verifiera fas 1 på användarens dator.** De 4 felen (`ohlc_inconsistent` för DIA,
+  GS, UNH, DIS på 2026-09-22) kom från Yahoos preliminära kvällsbar, som Yahoo tog bort
+  över natten (diagnos 2026-09-23 08:57 UTC: DIA-svaret slutade 2026-09-21). Sådana
+  rader ignoreras nu (se `docs/decisions.md`). Användaren kör: `git pull`,
+  `uv run swing data update`, `uv run swing data check`. Förväntat: inga error-rader;
+  data till 2026-09-21 med en OBS-rad tills Yahoo publicerar 2026-09-22 igen.
+  Kvarvarande varningar är kända och godkända: large_move för AMD 2016-04-22,
+  SMCI 2018-10-04 och NFLX 2013-01-24 (verkliga händelser); zero_volume för XLRE 2015
+  och AMD 2015-01-02; stale_close för SMCI 2017-02-14.
 
 ### Nästa steg
 1. Bekräfta 0 error ovan. Då är fas 1 klar.

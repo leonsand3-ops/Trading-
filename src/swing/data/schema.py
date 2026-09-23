@@ -11,6 +11,8 @@ Every stored bar carries two timestamps:
 
 import polars as pl
 
+from swing.data.calendar import NEW_YORK
+
 UTC_DATETIME = pl.Datetime(time_unit="us", time_zone="UTC")
 
 # Bars as returned by a provider, before they are tied to an instrument.
@@ -40,6 +42,13 @@ INSTRUMENT_SCHEMA: dict[str, pl.DataType] = {
 }
 
 BAR_KEY = ["instrument_id", "date"]
+
+# A stored bar version is final only if it was ingested on a later New York calendar
+# date than the bar itself. On the evening of a session Yahoo serves a provisional bar
+# built from live quotes and drops it again overnight: the 2026-09-22 bars fetched at
+# 17:43 New York time had open above high for four symbols, and the next morning Yahoo
+# returned no 2026-09-22 bar at all. Non-final versions are never stored or read.
+FINAL_BAR = pl.col("ingested_at").dt.convert_time_zone(NEW_YORK.key).dt.date() > pl.col("date")
 
 
 class SchemaError(ValueError):

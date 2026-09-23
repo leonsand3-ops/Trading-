@@ -1,9 +1,10 @@
-from datetime import UTC, datetime
+from datetime import UTC, date, datetime
 
 import polars as pl
 import pytest
 
-from swing.data.schema import INSTRUMENT_SCHEMA, SchemaError
+from swing.data.calendar import session_close_utc
+from swing.data.schema import BAR_SCHEMA, INSTRUMENT_SCHEMA, SchemaError
 from swing.data.store import DataStore
 
 T1 = datetime(2024, 1, 1, tzinfo=UTC)
@@ -39,3 +40,34 @@ def test_empty_append_writes_nothing(store: DataStore) -> None:
 def test_append_rejects_missing_columns(store: DataStore) -> None:
     with pytest.raises(SchemaError):
         store.instruments.append(pl.DataFrame({"symbol": ["AAA"]}), T1)
+
+
+def _bar(day: date, close: float, ingested_at: datetime) -> pl.DataFrame:
+    return pl.DataFrame(
+        {
+            "instrument_id": ["ins_a"],
+            "date": [day],
+            "open": [close],
+            "high": [close + 1],
+            "low": [close - 1],
+            "close": [close],
+            "volume": [1000.0],
+            "adjustment": ["split"],
+            "source": ["yahoo"],
+            "known_at": [session_close_utc(day)],
+            "ingested_at": [ingested_at],
+        },
+        schema=BAR_SCHEMA,
+    )
+
+
+def test_latest_bars_ignores_versions_ingested_on_the_bar_date(store: DataStore) -> None:
+    # The real case: Yahoo's provisional 2026-09-22 bars fetched at 17:43 New York time.
+    day = date(2026, 9, 22)
+    same_evening = datetime(2026, 9, 22, 21, 43, tzinfo=UTC)
+    store.bars.append(_bar(day, 518.0, same_evening), same_evening)
+    assert store.latest_bars().is_empty()
+
+    next_day = datetime(2026, 9, 23, 14, 0, tzinfo=UTC)
+    store.bars.append(_bar(day, 519.0, next_day), next_day)
+    assert store.latest_bars().get_column("close").to_list() == [519.0]

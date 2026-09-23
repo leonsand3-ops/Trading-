@@ -10,7 +10,7 @@ from pathlib import Path
 
 import polars as pl
 
-from swing.data.schema import BAR_KEY, BAR_SCHEMA, INSTRUMENT_SCHEMA, conform
+from swing.data.schema import BAR_KEY, BAR_SCHEMA, FINAL_BAR, INSTRUMENT_SCHEMA, conform
 
 
 class PartitionedTable:
@@ -38,10 +38,13 @@ class PartitionedTable:
             return pl.DataFrame(schema=self.schema)
         return conform(pl.concat([pl.read_parquet(p) for p in parts]), self.schema)
 
-    def read_latest(self, key: list[str]) -> pl.DataFrame:
+    def read_latest(self, key: list[str], where: pl.Expr | None = None) -> pl.DataFrame:
+        """Latest version per ``key``, considering only versions matching ``where``."""
+        versions = self.read_all_versions()
+        if where is not None:
+            versions = versions.filter(where)
         return (
-            self.read_all_versions()
-            .sort("ingested_at")
+            versions.sort("ingested_at")
             .unique(subset=key, keep="last", maintain_order=True)
             .sort(key)
         )
@@ -56,4 +59,5 @@ class DataStore:
         self.instruments = PartitionedTable(root / "instruments", INSTRUMENT_SCHEMA)
 
     def latest_bars(self) -> pl.DataFrame:
-        return self.bars.read_latest(BAR_KEY)
+        """Latest final version of every bar (see ``FINAL_BAR``)."""
+        return self.bars.read_latest(BAR_KEY, where=FINAL_BAR)

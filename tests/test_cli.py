@@ -48,6 +48,7 @@ def test_data_update_check_and_show(tmp_path: Path, monkeypatch: pytest.MonkeyPa
     assert "[1/2] AAA" in update.stdout
     assert "Sparade 4 rader för 1 symboler" in update.stdout
     assert "Senaste börsdag som sparades: 2024-01-05" in update.stdout
+    assert "OBS: 1 av 1 symboler saknar" in update.stdout  # old CSV data is behind today
     assert "MISSLYCKADES BBB" in update.output
 
     check = runner.invoke(app, ["data", "check"])

@@ -2,6 +2,30 @@
 
 Nya beslut läggs till överst. Ändra inte gamla beslut, skriv ett nytt som ersätter.
 
+## 2026-09-23 — En dagsbar räknas först när datumet slagit om i New York
+
+Ersätter rättelsen nedan och `SETTLE_DELAY`.
+
+Diagnos på användarens dator 2026-09-23 08:57 UTC: Yahoo levererade ingen bar alls för
+2026-09-22 (DIA-svaret slutade 2026-09-21). Raden för 2026-09-22 som hämtades kvällen
+innan, 17:43 New York-tid, var alltså en preliminär bar som Yahoo bygger av
+realtidskurser och sedan tar bort över natten. Den var också den enda inkonsistenta
+datan på 16 år för 55 symboler. De två tidigare förklaringarna (för tidig hämtning
+med sex timmars marginal, respektive fel i Yahoos slutliga data) var fel.
+
+Regel (`FINAL_BAR` i `schema.py`): en version av en dagsbar är slutgiltig bara om den
+sparades på ett senare kalenderdatum i New York än barens eget datum, dvs. från ca
+06:00 svensk tid dagen efter.
+
+- Ingest sparar bara slutgiltiga barer.
+- `latest_bars()` ignorerar versioner som inte är slutgiltiga, så de preliminära
+  raderna från 2026-09-22 som redan ligger sparade används inte. Inget raderas.
+- `data update` skriver en OBS-rad när en symbol saknar senaste förväntade börsdag.
+  Förväntad börsdag räknas som vardag; amerikanska helgdagar känns inte till och kan
+  ge en falsk OBS-rad dagen efter en helgdag.
+- Reparationen i Yahoo-adaptern (`MAX_RANGE_REPAIR`) behålls som skyddsnät, men den
+  har inte visats behövas för slutgiltig data.
+
 ## 2026-09-23 — Rättelse: Yahoos öppningskurs utanför dagens intervall
 
 Felen från 2026-09-22 (open över high för DIA, GS, UNH, DIS) fanns kvar med identiska

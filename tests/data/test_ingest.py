@@ -73,14 +73,14 @@ def test_duplicate_dates_from_provider_are_collapsed(store: DataStore) -> None:
     assert store.latest_bars().height == 3
 
 
-def test_bar_is_not_stored_until_it_has_settled(store: DataStore) -> None:
-    provider = FakeProvider({"AAA": make_raw_bars(START, 5)})  # Jan 1..5, close 21:00 UTC
-    half_hour_after_close = datetime(2024, 1, 5, 21, 30, tzinfo=UTC)
-    ingest_bars(provider, ["AAA"], START, END, store, half_hour_after_close)
+def test_bar_is_stored_only_after_new_york_date_rolls_over(store: DataStore) -> None:
+    provider = FakeProvider({"AAA": make_raw_bars(START, 5)})  # Mon Jan 1 .. Fri Jan 5
+    evening_after_close = datetime(2024, 1, 5, 23, 0, tzinfo=UTC)  # 18:00 New York
+    ingest_bars(provider, ["AAA"], START, END, store, evening_after_close)
     assert store.latest_bars().get_column("date").max() == date(2024, 1, 4)
 
-    two_hours_after_close = datetime(2024, 1, 5, 23, 0, tzinfo=UTC)
-    ingest_bars(provider, ["AAA"], START, END, store, two_hours_after_close)
+    after_midnight_new_york = datetime(2024, 1, 6, 5, 30, tzinfo=UTC)  # 00:30 New York
+    ingest_bars(provider, ["AAA"], START, END, store, after_midnight_new_york)
     assert store.latest_bars().get_column("date").max() == date(2024, 1, 5)
 
 

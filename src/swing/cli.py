@@ -10,6 +10,7 @@ import typer
 from swing import __version__
 from swing.config import data_dir, read_symbol_file
 from swing.data.asof import BarHistory
+from swing.data.calendar import latest_final_session
 from swing.data.ingest import incremental_starts, ingest_bars
 from swing.data.instruments import InstrumentRegistry
 from swing.data.providers import BarProvider, CsvProvider, YahooProvider
@@ -79,6 +80,7 @@ def data_update(
     def progress(position: int, total: int, symbol: str) -> None:
         typer.echo(f"  [{position}/{total}] {symbol}")
 
+    now = datetime.now(UTC)
     starts = (
         _parse_date(start)
         if start
@@ -90,13 +92,21 @@ def data_update(
         starts,
         end_date,
         store,
-        datetime.now(UTC),
+        now,
         on_symbol=progress,
     )
     total = sum(result.rows_written.values())
     typer.echo(f"Sparade {total} rader för {len(result.rows_written)} symboler i {store.root}")
     if result.last_date:
         typer.echo(f"Senaste börsdag som sparades: {max(result.last_date.values())}")
+        expected = latest_final_session(now)
+        behind = [s for s, last in result.last_date.items() if last < expected]
+        if behind:
+            typer.echo(
+                f"OBS: {len(behind)} av {len(result.last_date)} symboler saknar {expected}. "
+                f"{provider.source} har inte publicerat dagen än, eller så var det helgdag "
+                "i USA. Kör uppdateringen igen senare."
+            )
     for symbol, reason in result.failures.items():
         typer.echo(f"  MISSLYCKADES {symbol}: {reason}", err=True)
     if result.failures and not result.rows_written:
