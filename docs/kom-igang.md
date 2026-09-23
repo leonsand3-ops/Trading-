@@ -41,9 +41,8 @@ Kör `swing data update` igen när du vill ha ny data. Den hämtar bara de senas
 för symboler som redan finns (med tio dagars överlapp, så att Yahoos korrigeringar
 kommer med). Inget skrivs över; varje körning sparas som en ny version.
 
-En börsdag sparas först sex timmar efter att USA-börsen stängt (dvs. från ca 04:00
-svensk tid), eftersom Yahoo fortsätter rätta dagens siffror en tid efter stängning.
-Kör därför uppdateringen på morgonen.
+En börsdag sparas från en timme efter att USA-börsen stängt, dvs. från ca 23:00
+svensk tid (22:00 när USA och Sverige har olika sommartid).
 
 Vill du ladda ner allt på nytt: `uv run swing data update --start 2010-01-01`.
 

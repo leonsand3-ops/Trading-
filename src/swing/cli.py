@@ -95,6 +95,8 @@ def data_update(
     )
     total = sum(result.rows_written.values())
     typer.echo(f"Sparade {total} rader för {len(result.rows_written)} symboler i {store.root}")
+    if result.last_date:
+        typer.echo(f"Senaste börsdag som sparades: {max(result.last_date.values())}")
     for symbol, reason in result.failures.items():
         typer.echo(f"  MISSLYCKADES {symbol}: {reason}", err=True)
     if result.failures and not result.rows_written:

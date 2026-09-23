@@ -75,12 +75,12 @@ def test_duplicate_dates_from_provider_are_collapsed(store: DataStore) -> None:
 
 def test_bar_is_not_stored_until_it_has_settled(store: DataStore) -> None:
     provider = FakeProvider({"AAA": make_raw_bars(START, 5)})  # Jan 1..5, close 21:00 UTC
-    one_hour_after_close = datetime(2024, 1, 5, 22, 0, tzinfo=UTC)
-    ingest_bars(provider, ["AAA"], START, END, store, one_hour_after_close)
+    half_hour_after_close = datetime(2024, 1, 5, 21, 30, tzinfo=UTC)
+    ingest_bars(provider, ["AAA"], START, END, store, half_hour_after_close)
     assert store.latest_bars().get_column("date").max() == date(2024, 1, 4)
 
-    next_morning = datetime(2024, 1, 6, 12, 0, tzinfo=UTC)
-    ingest_bars(provider, ["AAA"], START, END, store, next_morning)
+    two_hours_after_close = datetime(2024, 1, 5, 23, 0, tzinfo=UTC)
+    ingest_bars(provider, ["AAA"], START, END, store, two_hours_after_close)
     assert store.latest_bars().get_column("date").max() == date(2024, 1, 5)
 
 

@@ -12,9 +12,9 @@ from swing.data.providers.base import BarProvider, ProviderError
 from swing.data.schema import UTC_DATETIME
 from swing.data.store import DataStore
 
-# Vendors keep correcting a daily bar for a while after the close (for example an open
-# above the high right after 16:00). Bars are only stored once this long has passed.
-SETTLE_DELAY = timedelta(hours=6)
+# Bars are only stored once this long after the close, so prints from the closing
+# auction have been included by the vendor.
+SETTLE_DELAY = timedelta(hours=1)
 # Incremental updates re-download this many days before the last stored bar, so late
 # vendor corrections replace earlier versions.
 INCREMENTAL_OVERLAP = timedelta(days=10)
@@ -23,6 +23,7 @@ INCREMENTAL_OVERLAP = timedelta(days=10)
 @dataclass
 class IngestResult:
     rows_written: dict[str, int] = field(default_factory=dict)
+    last_date: dict[str, date] = field(default_factory=dict)
     failures: dict[str, str] = field(default_factory=dict)
 
 
@@ -73,6 +74,7 @@ def ingest_bars(
         )
         store.bars.append(bars, now)
         result.rows_written[symbol] = bars.height
+        result.last_date[symbol] = bars.get_column("date").max()  # type: ignore[assignment]
     return result
 
 

@@ -10,7 +10,7 @@ Läs den här filen först i varje ny session. Uppdatera den när något är kla
 - **Fas 1 (kod):** point-in-time-datalager i `src/swing/data/`: append-only
   Parquet-lagring, stabila instrument-ID:n, as-of-åtkomst med truncation- och
   future-poisoning-tester, Yahoo- och CSV-adaptrar, datakvalitetskontroller, CLI
-  (`swing data update | check | show`), stegvis uppdatering, sex timmars väntetid
+  (`swing data update | check | show`), stegvis uppdatering, en timmes väntetid
   efter stängning innan en dag sparas.
 - Användaren har kört allt på sin Windows-dator: 55 symboler, 221 163 rader,
   2010-01-04 till 2026-09-22.

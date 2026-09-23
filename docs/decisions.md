@@ -9,8 +9,12 @@ värden efter omhämtning dagen efter. Orsaken var alltså inte att datan hämta
 tidigt, som antogs i beslutet nedan, utan ett fel i Yahoos egen data. Yahoo-adaptern
 vidgar nu high/low så att de omfattar open och close när avvikelsen är högst 1 % av
 kursen (`MAX_RANGE_REPAIR`). Större avvikelser lämnas orörda och flaggas av
-kvalitetskontrollen. Väntetiden på sex timmar efter stängning behålls; den är billig
-och skyddar mot ofärdiga dagsbarer.
+kvalitetskontrollen.
+
+Väntetiden efter stängning (`SETTLE_DELAY`) sänks från sex timmar till en timme.
+Sex timmar byggde på det felaktiga antagandet att Yahoo rättar dagsbaren i efterhand;
+i praktiken hindrade den bara användaren från att hämta gårdagen före 04:00 svensk tid.
+`data update` skriver nu ut senaste sparade börsdag, så att en utelämnad dag syns.
 
 ## 2026-09-22 — Konventioner för marknadsdata (fas 1)
 
